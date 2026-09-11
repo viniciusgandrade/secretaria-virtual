@@ -31,6 +31,7 @@ export class ChatService {
     contexto?: Partial<ContextoPaciente>
   ): Promise<ResultadoInterpretacao> {
     const system = interpretadorSystemPrompt
+      .replace('{{HOJE}}', this.formatarHoje())
       .replace('{{PROCEDIMENTOS}}', this.formatarProcedimentos(doctors))
       .replace('{{CONTEXTO}}', this.formatarContexto(contexto))
       .replace('{{SUGESTOES}}', this.formatarSugestoes(sugestoesAnteriores));
@@ -108,6 +109,12 @@ export class ChatService {
   }
 
   // --------------------------------------------------------------- privados
+
+  private formatarHoje(): string {
+    const agora = new Date();
+    const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+    return `${agora.toISOString().slice(0, 10)} (${dias[agora.getDay()]})`;
+  }
 
   private formatarProcedimentos(doctors: Doctor[]): string {
     if (!doctors?.length) return '(nenhuma médica cadastrada)';

@@ -45,12 +45,21 @@ export const informarPreferenciasSchema = z.object({
     .describe('Formato do atendimento. "indiferente" quando ela diz que tanto faz. null se não mencionou.'),
   diasPreferidos: z
     .array(z.enum(DIAS))
-    .default([])
-    .describe('Dias da semana que ela mencionou preferir. Lista vazia se não mencionou nenhum.'),
+    .nullable()
+    .default(null)
+    .describe(
+      'Dias da semana que ela mencionou preferir NESTA mensagem. Use null quando ela não falou de dias — não devolva lista vazia nesse caso, porque null preserva a preferência que ela já tinha dado antes.'
+    ),
   periodoPreferido: z
     .enum(['manha', 'tarde', 'noite'])
     .nullable()
-    .describe('Período do dia preferido, se mencionado.'),
+    .describe('Período do dia preferido, se mencionado nesta mensagem. null se não mencionou.'),
+  disponivelAPartirDe: z
+    .string()
+    .nullable()
+    .describe(
+      'Data no formato AAAA-MM-DD a partir da qual a paciente quer ser atendida, quando ela adia o início ("só depois do dia 20", "a partir de novembro"). Use a data de hoje, informada no contexto, como referência. null se ela não mencionou.'
+    ),
   semPreferenciaDeDias: z
     .boolean()
     .default(false)

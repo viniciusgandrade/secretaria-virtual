@@ -17,6 +17,9 @@ Sua única tarefa é escolher as ferramentas corretas para representar o que a m
 ATENDIMENTOS DISPONÍVEIS POR MÉDICA
 {{PROCEDIMENTOS}}
 
+DATA DE HOJE
+{{HOJE}}
+
 CONTEXTO JÁ CONHECIDO DESTA CONVERSA
 {{CONTEXTO}}
 

@@ -16,7 +16,8 @@ export function interpretacaoVazia(): InterpretacaoMensagem {
     alternarFormato: false,
     preferenciaNegativaDeDias: false,
     preferenciaInicioDisponibilidade: null,
-    diasPreferidos: [],
+    diasPreferidos: null,
+    periodoPreferido: null,
     horarioEscolhido: null,
     preferenciaMedica: null,
     tipoConsulta: null,
@@ -88,8 +89,11 @@ export function mapearToolCalls(
         interpretacao.tipoConsulta = d.tipoConsulta;
         interpretacao.preferenciaMedica = d.preferenciaMedica;
         interpretacao.formato = d.formato;
+        // null = "não falou de dias" e preserva o que já havia no contexto.
+        // [] viria a ser "nenhum dia serve", que não é o que queremos aqui.
         interpretacao.diasPreferidos = d.diasPreferidos;
-        interpretacao.preferenciaInicioDisponibilidade = d.periodoPreferido;
+        interpretacao.periodoPreferido = d.periodoPreferido;
+        interpretacao.preferenciaInicioDisponibilidade = validarDataInicio(d.disponivelAPartirDe);
         interpretacao.preferenciaNegativaDeDias = d.semPreferenciaDeDias;
         interpretacao.alternarFormato = d.alternarFormato;
         break;
@@ -135,4 +139,34 @@ export function mapearToolCalls(
   }
 
   return { interpretacao, acao, motivoEscalonamento, descartadas };
+}
+
+
+/**
+ * A única data que o modelo ainda produz. Aceita apenas AAAA-MM-DD que exista
+ * de verdade e não esteja no passado; qualquer outra coisa é descartada em vez
+ * de virar `Invalid Date` lá na frente, dentro do motor de disponibilidade.
+ */
+function validarDataInicio(valor: string | null): string | null {
+  if (!valor) return null;
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(valor)) {
+    logger.warn(`disponivelAPartirDe fora do formato AAAA-MM-DD: "${valor}" — descartado.`);
+    return null;
+  }
+
+  const data = new Date(`${valor}T00:00:00`);
+  if (Number.isNaN(data.getTime())) {
+    logger.warn(`disponivelAPartirDe não é uma data válida: "${valor}" — descartado.`);
+    return null;
+  }
+
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  if (data < hoje) {
+    logger.warn(`disponivelAPartirDe no passado: "${valor}" — descartado.`);
+    return null;
+  }
+
+  return valor;
 }

@@ -42,6 +42,9 @@ class ContextoPaciente {
   @Prop({ default: null })
   preferenciaInicioDisponibilidade: string;
 
+  @Prop({ enum: ['manha', 'tarde', 'noite'], default: null })
+  periodoPreferido: 'manha' | 'tarde' | 'noite';
+
   @Prop({ default: false })
   preferenciaNegativaDeDias: boolean;
 

@@ -24,6 +24,7 @@ export interface ContextoPaciente {
   nome?: string | null;
   diasPreferidos: string[];
   preferenciaInicioDisponibilidade: string | null;
+  periodoPreferido: 'manha' | 'tarde' | 'noite' | null;
   preferenciaNegativaDeDias: boolean;
 }
 
@@ -39,8 +40,10 @@ export interface InterpretacaoMensagem {
   remarcarAgendamento: boolean;
   alternarFormato: boolean;
   preferenciaNegativaDeDias: boolean;
-  preferenciaInicioDisponibilidade: string | null
-  diasPreferidos: string[];
+  preferenciaInicioDisponibilidade: string | null;
+  /** null = não mencionou dias nesta mensagem (preserva o contexto anterior). */
+  diasPreferidos: string[] | null;
+  periodoPreferido: 'manha' | 'tarde' | 'noite' | null;
   horarioEscolhido: HorarioEscolhido | null;
   preferenciaMedica: string | null;
   tipoConsulta: string | null;
