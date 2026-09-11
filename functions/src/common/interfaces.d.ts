@@ -40,7 +40,7 @@ export interface InterpretacaoMensagem {
   alternarFormato: boolean;
   preferenciaNegativaDeDias: boolean;
   preferenciaInicioDisponibilidade: string | null
-  diasPreferidos: string | null;
+  diasPreferidos: string[];
   horarioEscolhido: HorarioEscolhido | null;
   preferenciaMedica: string | null;
   tipoConsulta: string | null;

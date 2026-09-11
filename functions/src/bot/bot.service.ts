@@ -78,7 +78,12 @@ export class BotService {
     }
     const doctors = await this.doctorModel.find({});
     const contextoAtual = await this.chatContextModel.findOne({ pacienteId: paciente._id });
-    const intencaoParcial = await this.chatService.interpretarMensagem(message, doctors);
+    const { interpretacao: intencaoParcial } = await this.chatService.interpretarMensagem(
+      message,
+      doctors,
+      contextoAtual?.contexto?.sugestoesHorarios ?? [],
+      contextoAtual?.contexto
+    );
     const interpretado = mesclarIntencaoComContexto(intencaoParcial, contextoAtual?.contexto);
     const resposta = await this.processarMensagem(paciente, interpretado);
     await this.whatsapp.enviarMensagem(phone, resposta);
