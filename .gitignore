@@ -1,0 +1,29 @@
+# dependencies / build
+node_modules/
+functions/node_modules/
+functions/dist/
+functions/build/
+coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# secrets — nunca versionar
+.env
+.env.*
+!.env.example
+functions/.env
+functions/.env.*
+!functions/.env.example
+functions/credentials/
+*.pem
+*-key.json
+service-account*.json
+
+# local
+.DS_Store
+.idea/
+*.iml
+database/
+_git_gitlab_backup/

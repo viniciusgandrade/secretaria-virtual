@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./backend
+    container_name: secretaria_api
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URL=mongodb://svc_secretaria:${MONGO_PASSWORD}@mongo:27017/secretaria_virtual?authSource=admin
+    restart: always
+    depends_on:
+      - mongo
+    volumes:
+      - ./backend:/usr/src/app
+
+  mongo:
+    image: mongo:6
+    container_name: secretaria_mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: svc_secretaria
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: secretaria_virtual
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - ./database:/data/db
